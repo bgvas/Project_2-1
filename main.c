@@ -1,10 +1,20 @@
+// Project 2
+// Vasileios Georgoulas AM:2118147
+// Ioannis Skoumpas AM:
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 
 struct process{
-
+	int id;
+	int size;
+	int strtime;
+	char [10] condition;
+	int runtime;
+	struct process *next;
 };
 
 struct Q1{

@@ -25,9 +25,10 @@ int chance10();
 int main() {
 
     int main_counter = 0;
-    srand(time(NULL));
 
-    while(main_counter != 10){
+
+    //
+    while(main_counter != 100000){
 
 
 

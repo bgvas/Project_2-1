@@ -1,7 +1,7 @@
-// Project 2
-// Vasileios Georgoulas AM:2118147
-// Ioannis Skoumpas AM:2118063
-
+/* Project 2
+ Vasileios Georgoulas AM:2118147
+ Ioannis Skoumpas AM:2118063
+*/
 
 #include <stdio.h>
 #include <stdlib.h>

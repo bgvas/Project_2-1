@@ -1,11 +1,13 @@
 /* Project 2
- Vasileios Georgoulas AM:2118147
- Ioannis Skoumpas AM:2118063
+*               Vasileios Georgoulas AM:2118147
+*  Author's:    &
+*               Ioannis Skoumpas     AM: 2118063
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 
 struct process{
 	int id;
@@ -19,51 +21,48 @@ struct process{
 struct Q1{
     int front;
     int rear;
-    int arr[]
+    int size;
 };
 
 struct Q2{
     int front;
     int rear;
-    int arr[]
+    int size;
 };
 
-int chance10();
 
 
 int main() {
 
     int main_counter = 0;
+    
 
-
-    //
-    while(main_counter != 100000){
-
+    while(main_counter != 10){
 
 
         main_counter++;
+        printf("asdf")
     }
 }
 
-// Function(10%)
+// Procedure for 10%
 int chance10(){
 
     srand(time(NULL));
-    float chance = 10.f;
-
-    float n = rand() % 2;
-    n = (float) n * 100;
-
-    if(n<chance){
-        printf("10%%\n");
+    int randomq = rand() % 10 + 1;
+    if(randomq < 2){	// select Queue 1 for 10%
+        return 1;
+    }else{
+        return 0;
     }
+
 }
 
 // Procedure for random numbers
 int randomNumber(){
-	srand(time(NULL));		//Connect random engine with time,
-	int randomnumber;		//to generate real random numbers
-	randomnumber = rand()%10 + 1;	// generate random numbers (1-10)
+	srand(time(NULL));	//Connect random engine with time,
+	int randomnumber;		            //to generate real random numbers
+	randomnumber = rand()%10 + 1;	    // generate random numbers (1-10)
 	return randomnumber;
 }
 

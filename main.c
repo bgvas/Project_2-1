@@ -35,9 +35,9 @@ int chance10();
 int main() {
 
     int main_counter = 0;
-    srand(time(NULL));
+    
 
-    while(main_counter != 10){
+    while(main_counter != 100000){
 
 
 
@@ -49,7 +49,7 @@ int main() {
 int chance10(){
 
     srand(time(NULL));
-    float chance = 10.f;
+    float chance = 10.0f;
 
     float n = rand() % 2;
     n = (float) n * 100;

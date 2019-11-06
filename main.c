@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-struct process{
+struct Process{
 	int id;
 	int size;
 	int strtime;
@@ -18,26 +18,32 @@ struct process{
 	struct process *next;
 };
 
-struct queue{
+struct Queue{
     struct process *front;
     struct process *rear;
     int size;
 }*q1, *q2;
 
 
-void deQueue(struct Q1 *queue, struct process *pro);
+void deQueue(struct Queue *queue, struct Process *pro);
 
 int main() {
 
     int main_counter = 0;
-    
+
 
     while(main_counter != 10){
 
 
         main_counter++;
-        printf("asdf");
+
     }
+}
+
+void Init(struct Queue * queue){
+    queue->front = NULL;
+    queue->rear = NULL;
+    queue->size = 0;
 }
 
 // Procedure for 10%
@@ -50,7 +56,6 @@ int chance10(){
     }else{
         return 0;
     }
-
 }
 
 // Function for random numbers

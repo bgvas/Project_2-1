@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-struct Process{
+struct process{
 	int id;
 	int size;
 	int strtime;
@@ -18,19 +18,14 @@ struct Process{
 	struct process *next;
 };
 
-struct Q1{
-    struct Process *front;
-    struct Process *rear;
-    unsigned size;
-};
-
-struct Q2{
-    struct Process *front;
-    struct Process *rear;
+struct queue{
+    struct process *front;
+    struct process *rear;
     int size;
-};
+}*q1, *q2;
 
-void Init(struct Q1 * queue);
+
+void deQueue(struct Q1 *queue, struct process *pro);
 
 int main() {
 
@@ -41,14 +36,8 @@ int main() {
 
 
         main_counter++;
-
+        printf("asdf");
     }
-}
-
-void Init(struct Q1 * queue){
-    queue->front = NULL;
-    queue->rear = NULL;
-    queue->size = 0;
 }
 
 // Procedure for 10%
@@ -89,13 +78,13 @@ int randomQueue(){
 }
 
 // Delete an item from the Queue
-void deQueue(struct Q1 *queue, struct Process *pro){
+void deQueue(struct Q1 *queue, struct process *pro){
 	if(queue->size == 0){		// if queue is empty return.
 		return;
 	}
 	else{
 		queue->size--;			// decrease size of queue
-		struct Process *temp;	// create a temporary pointer
+		struct process *temp;	// create a temporary pointer
 		temp = pro;				// set the address of the element for delete equal to temp
 		temp->next = pro->next;
 		queue->front = pro->next; // set the front pointer of the queue equal the second element

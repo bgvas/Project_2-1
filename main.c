@@ -26,6 +26,7 @@ struct queue{
 
 
 void deQueue(struct queue *queue, struct process *pro);
+int queueSize(struct queue *queue);
 
 int main() {
 
@@ -91,7 +92,16 @@ void deQueue(struct queue *queue){
 		queue->size--;			// decrease size of queue
 		struct process *temp;	// create a temporary pointer
 		temp = queue->front;	// set the address of the element for delete equal to temp
-		queue->front = temp->next; // set the front pointer of the queue equal the second element
+		queue->front = temp->next; // set the front pointer of the queue equal to second element
 		free(temp);
 	}
 }
+
+// Get the size of a queue
+int queueSize(struct queue *queue){
+	return queue->size;
+}
+
+
+
+

@@ -81,3 +81,18 @@ int randomQueue(){
 	}
 
 }
+
+// Delete an item from the Queue
+void deQueue(struct Q1 *queue, struct process *pro){
+	if(queue->size == 0){		// if queue is empty return.
+		return;
+	}
+	else{
+		queue->size--;			// decrease size of queue
+		struct process *temp;	// create a temporary pointer
+		temp = pro;				// set the address of the element for delete equal to temp
+		temp->next = pro->next;
+		queue->front = pro->next; // set the front pointer of the queue equal the second element
+		free(temp); 			// delete
+	}
+}

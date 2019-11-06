@@ -41,7 +41,7 @@ int main() {
 
 
         main_counter++;
-        printf("asdf")
+        printf("asdf");
     }
 }
 

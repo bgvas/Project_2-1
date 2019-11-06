@@ -49,7 +49,7 @@ int main() {
 int chance10(){
 
     srand(time(NULL));
-    float chance = 10.f;
+    float chance = 10.0f;
 
     float n = rand() % 2;
     n = (float) n * 100;

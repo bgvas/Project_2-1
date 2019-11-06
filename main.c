@@ -18,17 +18,12 @@ struct process{
 	struct process *next;
 };
 
-struct Q1{
+struct queue{
     struct process *front;
     struct process *rear;
     int size;
-};
+}*q1, *q2;
 
-struct Q2{
-    struct process *front;
-    struct process *rear;
-    int size;
-};
 
 void deQueue(struct Q1 *queue, struct process *pro);
 

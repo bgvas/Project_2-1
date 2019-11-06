@@ -9,7 +9,7 @@
 #include <time.h>
 
 
-struct Process{
+struct process{
 	int id;
 	int size;
 	int strtime;
@@ -18,14 +18,14 @@ struct Process{
 	struct process *next;
 };
 
-struct Queue{
+struct queue{
     struct process *front;
     struct process *rear;
     int size;
 }*q1, *q2;
 
 
-void deQueue(struct Queue *queue, struct Process *pro);
+void deQueue(struct queue *queue, struct process *pro);
 
 int main() {
 
@@ -34,13 +34,13 @@ int main() {
 
     while(main_counter != 10){
 
-
+        printf("asd")
         main_counter++;
 
     }
 }
 
-void Init(struct Queue * queue){
+void Init(struct queue * queue){
     queue->front = NULL;
     queue->rear = NULL;
     queue->size = 0;
@@ -83,7 +83,7 @@ int randomQueue(){
 }
 
 // Delete an item from the Queue
-void deQueue(struct Q1 *queue, struct process *pro){
+void deQueue(struct queue *queue, struct process *pro){
 	if(queue->size == 0){		// if queue is empty return.
 		return;
 	}

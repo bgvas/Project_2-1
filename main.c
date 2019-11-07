@@ -8,12 +8,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+int idCounter = 0;
 
 struct process{
 	int id;
 	int size;
 	int strtime;
-	char condition [10];
+	char *condition;
 	int runtime;
 	struct process *next;
 };
@@ -32,10 +33,16 @@ int chance10();
 int randomNumber();
 int randomQueue();
 int isEmpty(struct queue *queue);
+void enqueue(struct queue *queue);
+int idCounter();
+
 
 int main() {
 
     int main_counter = 0;
+    int processes = 0;
+    printf("How many processes would you like to create?");
+    scanf("%d", &processes);
 
 
     while(main_counter != 10){
@@ -93,7 +100,7 @@ int isEmpty(struct queue *queue){
 
 // Delete an item from the Queue
 void deQueue(struct queue *queue){
-	if(queue->size == 0){		// if queue is empty return.
+	if(isEmpty(queue)){		// if queue is empty return.
 		return;
 	}
 	else{
@@ -103,6 +110,10 @@ void deQueue(struct queue *queue){
 		queue->front = temp->next; // set the front pointer of the queue equal to second element
 		free(temp);
 	}
+}
+
+int idCounter(){
+	return idCounter++;
 }
 
 // Get the size of a queue
@@ -115,14 +126,14 @@ void enqueue(struct queue *queue){
 	struct process *new;
 	new = (struct process *)malloc(sizeof(struct process));
 	struct process *temp;
-	new->id = 0 ;
+	new->id = idCounter();
 	new->size = randomNumber();
 	new->strtime = 0;
-	new->condition = "anamoni";
+	new->condition = "standBy";
 	new->runtime = -1;
 	new->next = NULL;
 
-	if(isEmpty(queue)){
+	if(isEmpty(queue)){	// if queue is empty, then set new as front and rear.
 		queue->front = new;
 	}
 	else{
@@ -132,6 +143,7 @@ void enqueue(struct queue *queue){
 	queue->rear = new;
 	queue->size++;
 }
+
 
 
 

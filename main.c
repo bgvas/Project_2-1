@@ -25,7 +25,7 @@ struct queue{
 }*q1, *q2;
 
 
-void deQueue(struct queue *queue, struct process *pro);
+void deQueue(struct queue *queue);
 int queueSize(struct queue *queue);
 void Init(struct queue * queue);
 int chance10();
@@ -40,7 +40,7 @@ int main() {
 
     while(main_counter != 10){
 
-        printf("asd")
+
         main_counter++;
     }
 }

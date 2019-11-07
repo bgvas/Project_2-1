@@ -27,6 +27,11 @@ struct queue{
 
 void deQueue(struct queue *queue, struct process *pro);
 int queueSize(struct queue *queue);
+void Init(struct queue * queue);
+int chance10();
+int randomNumber();
+int randomQueue();
+int isEmpty(struct queue *queue);
 
 int main() {
 
@@ -37,10 +42,10 @@ int main() {
 
         printf("asd")
         main_counter++;
-
     }
 }
 
+// Initialize the Queue
 void Init(struct queue * queue){
     queue->front = NULL;
     queue->rear = NULL;
@@ -49,7 +54,6 @@ void Init(struct queue * queue){
 
 // Procedure for 10%
 int chance10(){
-
     srand(time(NULL));
     int randomq = rand() % 10 + 1;
     if(randomq < 2){	// select Queue 1 for 10%
@@ -80,7 +84,11 @@ int randomQueue(){
 	else{			// select no Queue for remain 50%
 		return 0;
 	}
+}
 
+// Check if queue is empty
+int isEmpty(struct queue *queue){
+	return (queue->front == queue->rear);
 }
 
 // Delete an item from the Queue
@@ -101,6 +109,8 @@ void deQueue(struct queue *queue){
 int queueSize(struct queue *queue){
 	return queue->size;
 }
+
+
 
 
 

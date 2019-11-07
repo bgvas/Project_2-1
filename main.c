@@ -110,6 +110,31 @@ int queueSize(struct queue *queue){
 	return queue->size;
 }
 
+// add a new node in the queue
+void enqueue(struct queue *queue){
+	struct process *new;
+	new = (struct process *)malloc(sizeof(struct process));
+	struct process *temp;
+	new->id = 0 ;
+	new->size = randomNumber();
+	new->strtime = 0;
+	new->condition = "anamoni";
+	new->runtime = -1;
+	new->next = NULL;
+
+	if(isEmpty(queue)){
+		queue->front = new;
+	}
+	else{
+		temp = queue->rear;
+		temp->next = new;
+	}
+	queue->rear = new;
+	queue->size++;
+}
+
+
+
 
 
 

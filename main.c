@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-int idCounter = 0;
+int idcount = 1;
 
 struct process{
 	int id;
@@ -17,18 +17,19 @@ struct process{
 	char *condition;
 	int runtime;
 	struct process *next;
+	int steps;
 };
 
 struct queue{
     struct process *front;
     struct process *rear;
     int size;
-}*q1, *q2;
+};
 
 
 void deQueue(struct queue *queue);
 int queueSize(struct queue *queue);
-void Init(struct queue * queue);
+void Init(struct queue *queue);
 int chance10();
 int randomNumber();
 int randomQueue();
@@ -37,23 +38,28 @@ void enqueue(struct queue *queue);
 int idCounter();
 
 
+
+
 int main() {
 
-    int main_counter = 0;
-    int processes = 0;
-    printf("How many processes would you like to create?");
-    scanf("%d", &processes);
+	int main_counter = 0;
+	struct queue *q1, *q2;
+	q1 = (struct queue *)malloc(sizeof(struct queue));
+	q2 = (struct queue *)malloc(sizeof(struct queue));
+	Init(q1);
+	Init(q2);
+
 
 
     while(main_counter != 10){
-
-
         main_counter++;
     }
 }
 
+
+
 // Initialize the Queue
-void Init(struct queue * queue){
+void Init(struct queue *queue){
     queue->front = NULL;
     queue->rear = NULL;
     queue->size = 0;
@@ -95,7 +101,7 @@ int randomQueue(){
 
 // Check if queue is empty
 int isEmpty(struct queue *queue){
-	return (queue->front == queue->rear);
+	return queue->front == NULL;
 }
 
 // Delete an item from the Queue
@@ -113,7 +119,7 @@ void deQueue(struct queue *queue){
 }
 
 int idCounter(){
-	return idCounter++;
+	return idcount++;
 }
 
 // Get the size of a queue
@@ -125,7 +131,6 @@ int queueSize(struct queue *queue){
 void enqueue(struct queue *queue){
 	struct process *new;
 	new = (struct process *)malloc(sizeof(struct process));
-	struct process *temp;
 	new->id = idCounter();
 	new->size = randomNumber();
 	new->strtime = 0;
@@ -137,18 +142,8 @@ void enqueue(struct queue *queue){
 		queue->front = new;
 	}
 	else{
-		temp = queue->rear;
-		temp->next = new;
+		(queue->rear)->next = new;
 	}
 	queue->rear = new;
 	queue->size++;
 }
-
-
-
-
-
-
-
-
-

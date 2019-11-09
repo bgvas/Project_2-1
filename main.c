@@ -9,6 +9,7 @@
 #include <time.h>
 
 int idcount = 1;
+int main_counter = 1;
 
 struct process{
 	int id;
@@ -34,15 +35,15 @@ int chance10();
 int randomNumber();
 int randomQueue();
 int isEmpty(struct queue *queue);
-void enqueue(struct queue *queue);
+void enqueue(struct queue *queue, int startTime);
 int idCounter();
+int getTime();
 
 
 
 
 int main() {
 
-	int main_counter = 0;
 	struct queue *q1, *q2;
 	q1 = (struct queue *)malloc(sizeof(struct queue));
 	q2 = (struct queue *)malloc(sizeof(struct queue));
@@ -112,8 +113,8 @@ void deQueue(struct queue *queue){
 	else{
 		queue->size--;			// decrease size of queue
 		struct process *temp;	// create a temporary pointer
-		temp = queue->front;	// set the address of the element for delete equal to temp
-		queue->front = temp->next; // set the front pointer of the queue equal to second element
+		temp = queue->front;	// set the address of the node for delete, equal to temp
+		queue->front = temp->next; // set the front pointer of the queue equal to next node
 		free(temp);
 	}
 }
@@ -128,17 +129,17 @@ int queueSize(struct queue *queue){
 }
 
 // add a new node in the queue
-void enqueue(struct queue *queue){
+void enqueue(struct queue *queue, int startTime){
 	struct process *new;
 	new = (struct process *)malloc(sizeof(struct process));
 	new->id = idCounter();
 	new->size = randomNumber();
-	new->strtime = 0;
+	new->strtime = getTime();
 	new->condition = "standBy";
 	new->runtime = -1;
 	new->next = NULL;
 
-	if(isEmpty(queue)){	// if queue is empty, then set new as front and rear.
+	if(isEmpty(queue)){	// if queue is empty, then set new as front and rear together.
 		queue->front = new;
 	}
 	else{
@@ -147,3 +148,16 @@ void enqueue(struct queue *queue){
 	queue->rear = new;
 	queue->size++;
 }
+
+int getTime(){
+	return main_counter;
+}
+
+
+
+
+
+
+
+
+

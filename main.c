@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define STEPS 200
+
 int idcount = 1;
 int main_counter = 1;
 
@@ -39,7 +41,7 @@ void enqueue(struct queue *queue);
 int idCounter();
 int getTime();
 void deleteIf10steps(struct queue *q1, struct queue *q2);
-
+void checkCompletedProcesses(struct queue *q);
 
 
 
@@ -56,6 +58,7 @@ int main() {
 	int processes, i, pro;
 
 
+	// ask from user to set the number of starting process
 	printf("How many processes would you like to add?");
 	scanf("%d", &processes);
 	for(i = 1; i <= processes;){
@@ -71,8 +74,15 @@ int main() {
 	}
 
 	struct process *proc;
+	int sumForProcessSize = 0;
+	int sumForQ1Size = 0;
+	int sumForQ2Size = 0;
+	int processCounter = 0;
+	float processSizeAverage = 0;
+	float q1SizeAverage = 0;
+	float q2SizeAverage = 0;
 
-	while(main_counter <= 10){
+	while(main_counter <= STEPS){ // starting simulation
 
 		// add a new process into q1(30%) or q2(20%)
 		pro = randomQueue();
@@ -89,40 +99,47 @@ int main() {
 			if((q1->front)->runtime == -1){
 				(q1->front)->runtime = randomNumber();
 				(q1->front)->condition = "running";
+				(q1->front)->steps = 0;
 			}
 		}
 		else{
 			if((q2->front)->runtime == -1){
 				(q2->front)->runtime = randomNumber();
 				(q2->front)->condition = "running";
+				(q1->front)->steps = 0;
 			}
 		}
-
+		
+		// check if running processes, has completed
+		checkCompletedProcesses(q1);
+		checkCompletedProcesses(q2);
+	
 		// if a process in q2 is for 10 steps "standBy" delete it and put it in q1 rear
-		proc = q2->front;
-		while(proc != NULL){
-			if(proc->steps >= 10 && proc->condition == "standBy"){
-				deleteIf10steps(q1,q2);
-			}
-			proc = proc->next;
-		}
+		deleteIf10steps(q1,q2);
 
-
+		
 		// increase every process one step
 		proc = q1->front;
 		while(proc != NULL){
 			proc->steps++;
 			proc = proc->next;
 		}
-
 		proc = q2->front;
 		while(proc != NULL){
 			proc->steps++;
 			proc = proc->next;
 		}
+		
 		printf("\nSize of queue 1: %d - Size of queue 2: %d\n", q1->size, q2->size);
+		
+		sumForQ1Size += q1->size;
+		sumForQ2Size += q2->size;
         main_counter++;
     }
+    q1SizeAverage = (float)sumForQ1Size/STEPS;
+    q2SizeAverage = (float)sumForQ2Size/STEPS;
+    printf("\n\nAverage size of Q1:%0.1f in %d steps.", q1SizeAverage, STEPS);
+    printf("\nAverage size of Q2:%0.1f in %d steps.", q2SizeAverage, STEPS);
 }
 
 
@@ -224,17 +241,109 @@ void deleteIf10steps(struct queue *q1, struct queue *q2){
 	if(isEmpty(q2)){
 		return;
 	}
-	struct process *temp;
-	temp = q2->front;
-	q2->front = (q2->front)->next;
-	if(isEmpty(q1)){
-		q1->front == temp;
+	struct process *node, *previous;
+	node = q2->front;
+	previous = node;
+	while(node != NULL){
+		if((node->steps >= 10) && node->condition == "standBy"){ // if the node is the only node of queue
+			if(q2->front == node && q2->rear == node){
+				q2->front = q2->rear = NULL;
+				q2->size--;
+				
+				(q1->rear)->next = node;
+				q1->rear = node;	// put the node from q2 to q1 rear
+				node->next = NULL;
+				node->steps = 0;
+				q1->size++;
+				return;
+			}
+			else if(q2->front == node && q2->rear != node){ // if the node is the queue-front
+				q2->front = node->next;
+				previous = node->next;
+				q2->size--;
+				
+				(q1->rear)->next = node;
+				q1->rear = node;	// put the node from q2 to q1 rear
+				node->next = NULL;
+				node->steps = 0;
+				q1->size++;
+				
+				node = previous;
+			}
+			else if(q2->front != node && q2->rear == node){// if the node is the queue-rear
+				q2->rear = previous;
+				previous->next = NULL;
+				
+				q2->size--;
+				(q1->rear)->next = node;
+				q1->rear = node;	// put the node from q2 to q1 rear
+				node->next = NULL;
+				node->steps = 0;
+				q1->size++;
+				
+				return;
+			}
+			else if(q2->front != node && q2->rear != node){ // if the node is in the middle of queue
+				previous->next = node->next;
+				
+				q2->size--;
+				(q1->rear)->next = node;
+				q1->rear = node;	// put the node from q2 to q1 rear
+				node->next = NULL;
+				node->steps = 0;
+				q1->size++;
+				
+				node = previous->next;
+			}
+		}
+		else{
+			previous = node;
+			node = node->next;	// if can't find node with 10 steps in standBy, go on next
+		}
 	}
-	else{
-		(q1->rear)->next = temp;
+}
+
+// check if there are completed running processes and delete them
+void checkCompletedProcesses(struct queue *q){
+	if(isEmpty(q)){
+		return;
 	}
-	q1->rear = temp;
-	temp->next = NULL;
-	q1->size++;
-	q2->size--;
+	struct process *node, *previous;
+	node = q->front;
+	previous = node;
+	while(node != NULL){
+		if((node->steps == node->runtime) && node->condition == "running"){
+			if(q->front == node && q->rear == node){// if the node is the only node of queue
+				q->front = q->rear = NULL;
+				free(node);
+				free(previous);
+				q->size--;
+				return;
+			}
+			else if(q->front == node && q->rear != node){// if the node is the queue-front
+				q->front = node->next;
+				previous = node->next;
+				node = previous;
+				q->size--;
+			}
+			else if(q->front != node && q->rear == node){// if the node is the queue-rear
+				previous->next = NULL;
+				q->rear = previous;
+				free(node);
+				free(previous);
+				q->size--;
+				return;
+			}
+			else if(q->rear != node && q->front != node){// if the node is in the middle of queue
+				previous->next = node->next;
+				node = previous->next;
+				q->size--;
+			}
+		}
+		else{ // if can't find completed running node, go on next
+			previous = node;
+			node = node->next;
+		}
+	}
+	
 }

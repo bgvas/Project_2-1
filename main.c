@@ -33,7 +33,7 @@ struct queue{
 void deQueue(struct queue *queue);
 int queueSize(struct queue *queue);
 void Init(struct queue *queue);
-int chance10();
+void chance10(struct queue *q1, struct queue *q2);
 int randomNumber();
 int randomQueue();
 int isEmpty(struct queue *queue);
@@ -42,7 +42,8 @@ int idCounter();
 int getTime();
 void deleteIf10steps(struct queue *q1, struct queue *q2);
 void checkCompletedProcesses(struct queue *q);
-
+void mixQueues(struct queue *q);
+int sumForProcessSize = 0;
 
 
 
@@ -74,7 +75,7 @@ int main() {
 	}
 
 	struct process *proc;
-	int sumForProcessSize = 0;
+	
 	int sumForQ1Size = 0;
 	int sumForQ2Size = 0;
 	int processCounter = 0;
@@ -138,8 +139,10 @@ int main() {
     }
     q1SizeAverage = (float)sumForQ1Size/STEPS;
     q2SizeAverage = (float)sumForQ2Size/STEPS;
-    printf("\n\nAverage size of Q1:%0.1f in %d steps.", q1SizeAverage, STEPS);
-    printf("\nAverage size of Q2:%0.1f in %d steps.", q2SizeAverage, STEPS);
+    processSizeAverage = (float)sumForProcessSize/sumForQ2Size;
+    printf("\n\nAverage size of Q1: %0.1f", q1SizeAverage);
+    printf("\nAverage size of Q2: %0.1f", q2SizeAverage);
+    printf("\nAverage nodes size: %0.1f", processSizeAverage);
 }
 
 
@@ -153,15 +156,35 @@ void Init(struct queue *queue){
     queue->size = 0;
 }
 
-// Procedure for 10%
-int chance10(){
-    int randomq = rand() % 10 + 1;
-    if(randomq < 2){	// select Queue 1 for 10%
-        return 1;
+// change positions in Q2 and Q1 if 10%
+void chance10(struct queue *q1, struct queue *q2){
+    int randomq = rand() % 100 + 1;
+    if(randomq < 11){	// when 10%
+        mixQueues(q1);
+        mixQueues(q2);
     }else{
-        return 0;
+        return;
     }
 }
+
+void mixQueues(struct queue *q){
+		int i, randSelection;
+		struct process *previous;
+		struct process *actual;
+		if(!isEmpty(q)){
+			actual = q->front;
+			previous = NULL;
+			randSelection = rand()%sizeof(q) + 1;
+			for(i = 1; i <= randSelection; i++){
+					previous = actual;
+					actual = actual->next;
+			}
+			previous->next = actual->next;
+			actual->next = q->front;
+			q->front = actual;
+		}
+		else return;
+	}
 
 // Function for random numbers
 int randomNumber(){
@@ -245,6 +268,7 @@ void deleteIf10steps(struct queue *q1, struct queue *q2){
 	node = q2->front;
 	previous = node;
 	while(node != NULL){
+		sumForProcessSize += node->size; // get sum of q2 nodes->size 
 		if((node->steps >= 10) && node->condition == "standBy"){ // if the node is the only node of queue
 			if(q2->front == node && q2->rear == node){
 				q2->front = q2->rear = NULL;

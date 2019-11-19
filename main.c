@@ -118,6 +118,8 @@ int main() {
 		// if a process in q2 is for 10 steps "standBy" delete it and put it in q1 rear
 		deleteIf10steps(q1,q2);
 
+		// for 10% get randomly a node from queue and put it in the front position of queue
+		chance10(q1, q2);
 		
 		// increase every process one step
 		proc = q1->front;
@@ -143,6 +145,9 @@ int main() {
     printf("\n\nAverage size of Q1: %0.1f", q1SizeAverage);
     printf("\nAverage size of Q2: %0.1f", q2SizeAverage);
     printf("\nAverage nodes size: %0.1f", processSizeAverage);
+    free(proc);
+    free(q1);
+    free(q2);
 }
 
 
@@ -158,10 +163,10 @@ void Init(struct queue *queue){
 
 // change positions in Q2 and Q1 if 10%
 void chance10(struct queue *q1, struct queue *q2){
-    int randomq = rand() % 100 + 1;
-    if(randomq < 11){	// when 10% go on
-        mixQueues(q1);
-        mixQueues(q2);
+    int randomq = rand() % 10 + 1;
+    if(randomq < 1){	// when 10% go on
+       mixQueues(q1);
+       mixQueues(q2);
     }else{
         return;
     }
@@ -170,21 +175,29 @@ void chance10(struct queue *q1, struct queue *q2){
 // Get randomly a node from queue and put it in the front position of this queue
 void mixQueues(struct queue *q){
 		int i, randSelection;
-		struct process *previous;
-		struct process *actual;
+
 		if(!isEmpty(q)){
+			struct process *previous;
+			struct process *actual;
+			previous = (struct process *)malloc(sizeof(struct process));
+			actual = (struct process *)malloc(sizeof(struct process));
 			actual = q->front;
-			previous = NULL;
+			previous = actual;
 			randSelection = rand()%sizeof(q) + 1;	// get a random node
-			for(i = 1; i <= randSelection; i++){ // begin from 1 and stop queue crossing in the random node
-					previous = actual;
-					actual = actual->next;
+			for(i = 1; i < randSelection; i++){ // begin from 1 and stop queue crossing in the random node
+				previous = actual;
+				actual = actual->next;
 			}
 			previous->next = actual->next;	// remove the random node from it position
 			actual->next = q->front;	// and put it in the front position of queue
 			q->front = actual;
+			free(previous);
+			free(actual);
 		}
-		else return;
+
+		else {
+			return;
+		}
 	}
 
 // Function for random numbers

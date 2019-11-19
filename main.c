@@ -159,7 +159,7 @@ void Init(struct queue *queue){
 // change positions in Q2 and Q1 if 10%
 void chance10(struct queue *q1, struct queue *q2){
     int randomq = rand() % 100 + 1;
-    if(randomq < 11){	// when 10%
+    if(randomq < 11){	// when 10% go on
         mixQueues(q1);
         mixQueues(q2);
     }else{
@@ -167,6 +167,7 @@ void chance10(struct queue *q1, struct queue *q2){
     }
 }
 
+// Get randomly a node from queue and put it in the front position of this queue
 void mixQueues(struct queue *q){
 		int i, randSelection;
 		struct process *previous;
@@ -174,13 +175,13 @@ void mixQueues(struct queue *q){
 		if(!isEmpty(q)){
 			actual = q->front;
 			previous = NULL;
-			randSelection = rand()%sizeof(q) + 1;
-			for(i = 1; i <= randSelection; i++){
+			randSelection = rand()%sizeof(q) + 1;	// get a random node
+			for(i = 1; i <= randSelection; i++){ // begin from 1 and stop queue crossing in the random node
 					previous = actual;
 					actual = actual->next;
 			}
-			previous->next = actual->next;
-			actual->next = q->front;
+			previous->next = actual->next;	// remove the random node from it position
+			actual->next = q->front;	// and put it in the front position of queue
 			q->front = actual;
 		}
 		else return;
@@ -223,6 +224,7 @@ void deQueue(struct queue *queue){
 	}
 }
 
+// Get numbers for Processes id
 int idCounter(){
 	return idcount++;
 }

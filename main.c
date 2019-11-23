@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define STEPS 200
+#define STEPS 100000
 
 int idcount = 1;
 int main_counter = 1;
@@ -30,7 +30,6 @@ struct queue{
 };
 
 
-void deQueue(struct queue *queue);
 int queueSize(struct queue *queue);
 void Init(struct queue *queue);
 void chance10(struct queue *q1, struct queue *q2);
@@ -40,9 +39,12 @@ int isEmpty(struct queue *queue);
 void enqueue(struct queue *queue);
 int idCounter();
 int getTime();
+void mixQueues(struct queue *q);
 void deleteIf10steps(struct queue *q1, struct queue *q2);
 void checkCompletedProcesses(struct queue *q);
-void mixQueues(struct queue *q);
+struct queue *merge(struct queue *q1, struct queue *q2);
+void sort(struct queue *q);
+int cmpNode(struct process *a, struct process *b);
 int sumForProcessSize = 0;
 
 
@@ -121,7 +123,7 @@ int main() {
 		// for 10% get randomly a node from queue and put it in the front position of queue
 		chance10(q1, q2);
 		
-		// increase every process one step
+		// increase every process by one step
 		proc = q1->front;
 		while(proc != NULL){
 			proc->steps++;
@@ -145,6 +147,7 @@ int main() {
     printf("\n\nAverage size of Q1: %0.1f", q1SizeAverage);
     printf("\nAverage size of Q2: %0.1f", q2SizeAverage);
     printf("\nAverage nodes size: %0.1f", processSizeAverage);
+    sort(merge(q1, q2)); // merge the 2 queues, sort the new list and print it
     free(proc);
     free(q1);
     free(q2);
@@ -198,6 +201,7 @@ void mixQueues(struct queue *q){
 		else {
 			return;
 		}
+		
 	}
 
 // Function for random numbers
@@ -221,20 +225,6 @@ int randomQueue(){
 // Check if queue is empty
 int isEmpty(struct queue *queue){
 	return queue->front == NULL;
-}
-
-// Delete an item from the Queue
-void deQueue(struct queue *queue){
-	if(isEmpty(queue)){		// if queue is empty return.
-		return;
-	}
-	else{
-		queue->size--;			// decrease size of queue
-		struct process *temp;	// create a temporary pointer
-		temp = queue->front;	// set the address of the node for delete, equal to temp
-		queue->front = temp->next; // set the front pointer of the queue equal to next node
-		free(temp);
-	}
 }
 
 // Get numbers for Processes id
@@ -385,4 +375,57 @@ void checkCompletedProcesses(struct queue *q){
 		}
 	}
 	
+}
+
+// merge the 2 queues in one
+struct queue *merge(struct queue *q1, struct queue *q2){
+    struct queue *list = (struct queue *)malloc(sizeof(struct queue));
+    struct process *node = (struct process *)malloc(sizeof(struct process));
+    list = q1;
+    node = q2->front;
+    while(node != NULL){
+        (list->rear)->next = node;
+        list->size++;
+        list->rear = node;
+        node = node->next;
+    }
+    free(node);
+    return list;
+    
+}
+
+// function for sorting and printing data from queues
+void sort(struct queue *q){
+	struct process *node;
+	struct process *temp;
+	struct process *list[queueSize(q)];
+	
+	// create an array of structs
+	node = q->front;
+	int i = 0, j;
+	printf("\n\nWait for sorting...\n");
+	while(node != NULL){
+		
+		list[i] = node; 	
+		node = node->next;
+		i++;
+	}
+	// sort with Bubble Sort
+	for (j = 0; j < queueSize(q) - 1; ++j){
+    	for (i = 0; i < queueSize(q) - j - 1; ++i){
+      		if (list[i]->size > list[i + 1]->size){ // if previous-size > next-size then
+        		temp = list[i];		// switch places
+        		list[i] = list[i + 1];
+        		list[i + 1] = temp;
+      		}
+    	}
+  	}
+	
+    // print all sorted nodes
+    for(i = 0; i < queueSize(q); i++){
+		printf("\nId:%d - size:%d\n",list[i]->id, list[i]->size);
+	}
+	
+	free(temp);
+	free(node);
 }

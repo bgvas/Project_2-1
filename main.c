@@ -109,7 +109,7 @@ int main() {
 			if((q2->front)->runtime == -1){
 				(q2->front)->runtime = randomNumber();
 				(q2->front)->condition = "running";
-				(q1->front)->steps = 0;
+				(q2->front)->steps = 0;
 			}
 		}
 		

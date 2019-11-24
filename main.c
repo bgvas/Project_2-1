@@ -146,7 +146,7 @@ int main() {
     processSizeAverage = (float)sumForProcessSize/sumForQ2Size;
     printf("\n\nAverage size of Q1: %0.1f", q1SizeAverage);
     printf("\nAverage size of Q2: %0.1f", q2SizeAverage);
-    printf("\nAverage nodes size: %0.1f", processSizeAverage);
+    printf("\nAverage size of node: %0.1f", processSizeAverage);
     sort(merge(q1, q2)); // merge the 2 queues, sort the new list and print it
     free(proc);
     free(q1);
@@ -213,11 +213,11 @@ int randomNumber(){
 // Function for Queue random selection
 int randomQueue(){
 	int randomq = randomNumber();
-	if(randomq < 4){
+	if(randomq < 4){	// select Queue-1 with  30% possibility
 		return 1;
 	}
 	else if(randomq < 6){
-		return 2;
+		return 2;		// select Queue-2 with  20% possibility
 	}
 	else return 0;
 }
@@ -249,7 +249,7 @@ void enqueue(struct queue *queue){
 	new->next = NULL;
 	new->steps = 0;
 
-	if(isEmpty(queue)){	// if queue is empty, then set new as front - rear together.
+	if(isEmpty(queue)){	// if queue is empty, then set new as front & rear together.
 		queue->front = new;
 	}
 	else{
@@ -324,6 +324,7 @@ void deleteIf10steps(struct queue *q1, struct queue *q2){
 				
 				node = previous->next;
 			}
+			
 		}
 		else{
 			previous = node;
@@ -332,7 +333,7 @@ void deleteIf10steps(struct queue *q1, struct queue *q2){
 	}
 }
 
-// check if there are completed running processes and delete them
+// check if there are completed running processes, and delete them
 void checkCompletedProcesses(struct queue *q){
 	if(isEmpty(q)){
 		return;
@@ -391,21 +392,19 @@ struct queue *merge(struct queue *q1, struct queue *q2){
     }
     free(node);
     return list;
-    
 }
 
 // function for sorting and printing data from queues
 void sort(struct queue *q){
 	struct process *node;
 	struct process *temp;
-	struct process *list[queueSize(q)];
 	
 	// create an array of structs
+	struct process *list[queueSize(q)];
 	node = q->front;
 	int i = 0, j;
 	printf("\n\nWait for sorting...\n");
-	while(node != NULL){
-		
+	while(node != NULL){	// put every node that exists in the array
 		list[i] = node; 	
 		node = node->next;
 		i++;
@@ -422,8 +421,10 @@ void sort(struct queue *q){
   	}
 	
     // print all sorted nodes
+    printf("\nId - size\n");
+    printf("-----------\n");
     for(i = 0; i < queueSize(q); i++){
-		printf("\nId:%d - size:%d\n",list[i]->id, list[i]->size);
+		printf("%d   \t%d\n",list[i]->id, list[i]->size);
 	}
 	
 	free(temp);
